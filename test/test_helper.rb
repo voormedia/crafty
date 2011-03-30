@@ -11,3 +11,11 @@ class Test::Unit::TestCase
     end
   end
 end
+
+if RUBY_VERSION < "1.9"
+  class Hash
+    def each
+      to_a.sort_by { |k, v| k.to_s }.each &Proc.new
+    end
+  end
+end

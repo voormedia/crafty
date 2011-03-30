@@ -52,7 +52,11 @@ class ElementsTest < Test::Unit::TestCase
   end
 
   test "instruct should return xml processing instruction" do
-    assert_equal %Q{<?xml version="1.0" encoding="UTF-8"?>}, @object.instruct!
+    if RUBY_VERSION < "1.9"
+      assert_equal %Q{<?xml encoding="UTF-8" version="1.0"?>}, @object.instruct!
+    else
+      assert_equal %Q{<?xml version="1.0" encoding="UTF-8"?>}, @object.instruct!
+    end
   end
 
   test "instruct should return custom processing instruction" do
