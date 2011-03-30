@@ -58,9 +58,9 @@ class ElementsTest < Test::Unit::TestCase
     assert_equal %Q{<el><safe></safe></el>}, @object.element!("el") { html }
   end
 
-  test "element should escape attributes even if they have been marked as html safe" do
-    html = "<safe></safe>".html_safe
-    assert_equal %Q{<el attr="&lt;safe&gt;&lt;/safe&gt;"/>}, @object.element!("el", :attr => html)
+  test "element should not escape attributes that have been marked as html safe" do
+    html = "http://example.org/?q=example&amp;a=search".html_safe
+    assert_equal %Q{<el attr="http://example.org/?q=example&amp;a=search"/>}, @object.element!("el", :attr => html)
   end
 
   test "element should return html safe string" do

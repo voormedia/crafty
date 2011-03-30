@@ -9,16 +9,13 @@ module Artisan
         return if attributes.nil?
         output = ""
         attributes.each do |name, value|
-          output << %Q{ #{name}="#{escape!(value)}"}
+          output << %Q{ #{name}="#{escape(value)}"}
         end
         output
       end
 
       def escape(content)
-        if content.html_safe? then content else escape!(content) end
-      end
-
-      def escape!(content)
+        return content if content.html_safe?
         content.gsub(/[&><"]/) { |char| ESCAPE_SEQUENCE[char] }
       end
     end
