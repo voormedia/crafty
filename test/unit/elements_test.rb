@@ -67,6 +67,10 @@ class ElementsTest < Test::Unit::TestCase
     assert_equal true, @object.element!("el").html_safe?
   end
 
+  test "element should return string that reamins html safe when calling to_s" do
+    assert_equal true, @object.element!("el").to_s.html_safe?
+  end
+
   # Building =================================================================
   test "element should be nestable" do
     assert_equal %Q{<el><nested>content</nested></el>},
