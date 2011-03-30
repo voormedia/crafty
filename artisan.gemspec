@@ -10,11 +10,27 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Rolf Timmermans"]
   s.date = %q{2011-03-30}
-  s.description = %q{Artisan provides a set of module helpers to easily and flexibly craft HTML output from within any class.}
+  s.description = %q{Artisan provides you the tools to easily and flexibly craft HTML output.}
   s.email = %q{r.timmermans@voormedia.com}
+  s.files = [
+    "Rakefile",
+    "VERSION",
+    "lib/artisan.rb",
+    "lib/artisan/elements.rb",
+    "lib/artisan/toolset.rb",
+    "lib/artisan/toolsets/html5.rb",
+    "test/test_helper.rb",
+    "test/unit/elements_test.rb",
+    "test/unit/html5_test.rb"
+  ]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.5.2}
-  s.summary = %q{Artisan artisanry tools for HTML.}
+  s.summary = %q{Artisan tools for HTML crafting.}
+  s.test_files = [
+    "test/test_helper.rb",
+    "test/unit/elements_test.rb",
+    "test/unit/html5_test.rb"
+  ]
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
