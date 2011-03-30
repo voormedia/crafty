@@ -2,7 +2,7 @@ require "artisan/safety"
 
 module Artisan
   module Elements
-    ESCAPE_SEQUENCE = { "&" => "&amp;",  ">" => "&gt;",   "<" => "&lt;", '"' => "&quot;" }
+    ESCAPE_SEQUENCE = { "&" => "&amp;", ">" => "&gt;", "<" => "&lt;", '"' => "&quot;" }
 
     class << self
       def format_attributes(attributes)
