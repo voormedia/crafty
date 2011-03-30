@@ -49,8 +49,8 @@ class ElementsTest < Test::Unit::TestCase
   end
 
   test "element should return element with given name and escaped attributes" do
-    assert_equal %Q{<el name="&quot;attrib&quot;" prop="a &gt; 1 &amp; b &lt; 4"/>},
-      @object.element!("el", :name => %Q{"attrib"}, :prop => "a > 1 & b < 4")
+    assert_equal %Q{<el attr="&quot;attrib&quot;" prop="a &gt; 1 &amp; b &lt; 4"/>},
+      @object.element!("el", :attr => %Q{"attrib"}, :prop => "a > 1 & b < 4")
   end
 
   test "element should not escape content that has been marked as html safe" do
