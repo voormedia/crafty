@@ -43,6 +43,14 @@ class ElementsTest < Test::Unit::TestCase
       @object.element!("el", :name => %Q{"attrib"}, :prop => "a > 1 & b < 4")
   end
 
+  test "element should not escape content that has been marked as html safe" do
+    html = "<safe></safe>"
+    class << html
+      def html_safe?; true; end
+    end
+    assert_equal %Q{<el><safe></safe></el>}, @object.element!("el") { html }
+  end
+
   # Building =================================================================
   test "element should be nestable" do
     assert_equal %Q{<el><nested>content</nested></el>},
