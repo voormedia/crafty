@@ -6,6 +6,10 @@ class HTML5Test < Test::Unit::TestCase
   end
 
   # Simple methods ===========================================================
+  test "html should equal html5" do
+    assert_equal Artisan::HTML, Artisan::HTML5
+  end
+
   test "a should return anchor with given attributes" do
     assert_equal %Q{<a href="http://example.org">link</a>},
       @object.a(:href => "http://example.org") { "link" }

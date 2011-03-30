@@ -11,5 +11,5 @@ module Artisan
   html5_empty_elements = %w{area base br col command embed hr img input keygen
   link meta param source track wbr}
 
-  HTML5 = Toolset.create(html5_elements, html5_empty_elements)
+  HTML = HTML5 = Toolset.create(html5_elements, html5_empty_elements)
 end
