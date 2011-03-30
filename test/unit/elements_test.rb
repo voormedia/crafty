@@ -123,16 +123,24 @@ class ElementsTest < Test::Unit::TestCase
   end
 
   test "element should be reset state of buffer after being called" do
-    assert_equal %Q{<el/><el/>},
-      @object.element!("el") + @object.element!("el")
+    assert_equal %Q{<el/><el/>}, @object.element!("el") + @object.element!("el")
   end
 
   test "element should append to object that responds to arrows" do
     object = Class.new(Array) { include Artisan::Elements }.new
-    assert_equal ["<el>", "<nest>", "content", "</nest>", "<nested>", "more content", "</nested>", "</el>"],
+    assert_equal ["<el><nest>content</nest><nested>more content</nested></el>"],
       object.element!("el") {
         object.element!("nest") { "content" }
         object.element!("nested") { "more content" }
       }
+  end
+
+  test "element should append html safe strings to object that responds to arrows" do
+    object = Class.new(Array) { include Artisan::Elements }.new
+    result = object.element!("el") {
+      object.element!("nest") { "content" }
+      object.element!("nested") { "more content" }
+    }
+    assert_equal [true] * result.length, result.map(&:html_safe?)
   end
 end

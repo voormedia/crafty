@@ -61,11 +61,17 @@ module Artisan
     private
 
     def ensure_building!
-      previous_builder, @artisan_output = @artisan_output, @artisan_output || (respond_to?(:<<) ? self : SafeString.new)
+      if entrance = @artisan_output.nil?
+        @artisan_output = SafeString.new
+      end
       yield
-      @artisan_output
+      if entrance and respond_to?(:<<)
+        self << @artisan_output
+      else
+        @artisan_output
+      end
     ensure
-      @artisan_output = previous_builder
+      @artisan_output = nil if entrance
     end
   end
 end
