@@ -21,11 +21,11 @@ module Artisan
     end
 
     def element!(element, attributes = {})
-      @artisan_output ||= SafeString.new
+      @artisan_output ||= respond_to?(:<<) ? self : SafeString.new
       if block_given?
         @artisan_output << "<#{element}#{Elements.format_attributes(attributes)}>"
-        unless (content = yield.to_s) == @artisan_output
-          @artisan_output << Elements.escape(content)
+        unless (content = yield) == @artisan_output
+          @artisan_output << Elements.escape(content.to_s)
         end
         @artisan_output << "</#{element}>"
       else

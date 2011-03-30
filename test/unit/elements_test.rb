@@ -74,10 +74,19 @@ class ElementsTest < Test::Unit::TestCase
   end
 
   test "element should be nestable and chainable without concatenation" do
-    assert_equal %Q{<el><nested>content</nested><nested>content</nested></el>},
+    assert_equal %Q{<el><nest>content</nest><nested>more content</nested></el>},
       @object.element!("el") {
-        @object.element!("nested") { "content" }
-        @object.element!("nested") { "content" }
+        @object.element!("nest") { "content" }
+        @object.element!("nested") { "more content" }
+      }
+  end
+
+  test "element should append to object that responds to arrows" do
+    object = Class.new(Array) { include Artisan::Elements }.new
+    assert_equal ["<el>", "<nest>", "content", "</nest>", "<nested>", "more content", "</nested>", "</el>"],
+      object.element!("el") {
+        object.element!("nest") { "content" }
+        object.element!("nested") { "more content" }
       }
   end
 end
