@@ -19,7 +19,7 @@ module Artisan
           include Elements
 
           elements.each do |element|
-            module_eval <<-RUBY
+            module_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{element}(attributes = nil)
                 element!("#{element}", attributes, &Proc.new)
               end
@@ -27,7 +27,7 @@ module Artisan
           end
 
           empty_elements.each do |element|
-            module_eval <<-RUBY
+            module_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{element}(attributes = nil)
                 element!("#{element}", attributes)
               end
