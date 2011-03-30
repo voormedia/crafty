@@ -72,6 +72,10 @@ class ElementsTest < Test::Unit::TestCase
     assert_equal %Q{<?foo attr="instr"?>}, @object.instruct!("foo", :attr => "instr")
   end
 
+  test "text should append directly to output stream" do
+    assert_equal %Q{foobar}, @object.text!("foobar")
+  end
+
   test "write should append directly to output stream" do
     assert_equal %Q{foobar}, @object.write!("foobar")
   end
@@ -95,8 +99,8 @@ class ElementsTest < Test::Unit::TestCase
     assert_equal %Q{<?foo comment="1 &lt; 2"?>}, @object.instruct!("foo", :comment => "1 < 2")
   end
 
-  test "write should not escape output" do
-    assert_equal %Q{foo & bar}, @object.write!("foo & bar")
+  test "write should escape output" do
+    assert_equal %Q{foo &amp; bar}, @object.write!("foo & bar")
   end
 
   test "element should not escape content that has been marked as html safe" do
@@ -107,6 +111,10 @@ class ElementsTest < Test::Unit::TestCase
   test "element should not escape attributes that have been marked as html safe" do
     html = "http://example.org/?q=example&amp;a=search".html_safe
     assert_equal %Q{<el attr="http://example.org/?q=example&amp;a=search"/>}, @object.element!("el", :attr => html)
+  end
+
+  test "write should not escape output that has been marked as html safe" do
+    assert_equal %Q{foo &amp; bar}, @object.write!("foo &amp; bar".html_safe)
   end
 
   test "element should return html safe string" do

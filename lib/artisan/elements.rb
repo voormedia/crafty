@@ -7,11 +7,9 @@ module Artisan
     class << self
       def format_attributes(attributes)
         return if attributes.nil?
-        output = ""
-        attributes.each do |name, value|
-          output << %Q{ #{name}="#{escape(value.to_s)}"}
-        end
-        output
+        attributes.collect do |name, value|
+          %Q{ #{name}="#{escape(value.to_s)}"}
+        end.join
       end
 
       def escape(content)
@@ -21,7 +19,7 @@ module Artisan
     end
 
     def element!(element, *arguments)
-      ensure_building! do
+      build! do
         attributes = arguments.pop if arguments.last.kind_of?(Hash)
         content = arguments.first
         if content or block_given?
@@ -37,7 +35,7 @@ module Artisan
     end
 
     def comment!(content)
-      ensure_building! do
+      build! do
         @artisan_output << "<!-- "
         @artisan_output << Elements.escape(content.to_s)
         @artisan_output << " -->"
@@ -49,31 +47,32 @@ module Artisan
         name = "xml"
         attributes = { :version => "1.0", :encoding => "UTF-8" }
       end
-      ensure_building! do
+      build! do
         @artisan_output << "<?#{name}#{Elements.format_attributes(attributes)}?>"
       end
     end
 
-    def write!(content)
-      ensure_building! do
-        @artisan_output << content
+    def text!(content)
+      build! do
+        @artisan_output << Elements.escape(content.to_s)
       end
     end
+    alias_method :write!, :text!
 
     private
 
-    def ensure_building!
-      if entrance = @artisan_output.nil?
-        @artisan_output = SafeString.new
-      end
-      yield
-      if entrance and respond_to?(:<<)
-        self << @artisan_output
+    def build!
+      if @artisan_output
+        yield
       else
-        @artisan_output
+        begin
+          @artisan_output = SafeString.new
+          yield
+          if respond_to? :<< then self << @artisan_output else @artisan_output end
+        ensure
+          @artisan_output = nil
+        end
       end
-    ensure
-      @artisan_output = nil if entrance
     end
   end
 end
