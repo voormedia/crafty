@@ -63,6 +63,10 @@ class ElementsTest < Test::Unit::TestCase
     assert_equal %Q{<el attr="&lt;safe&gt;&lt;/safe&gt;"/>}, @object.element!("el", :attr => html)
   end
 
+  test "element should return html safe string" do
+    assert_equal true, @object.element!("el").html_safe?
+  end
+
   # Building =================================================================
   test "element should be nestable" do
     assert_equal %Q{<el><nested>content</nested></el>},

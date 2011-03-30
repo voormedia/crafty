@@ -1,8 +1,4 @@
-class Object
-  def html_safe?
-    false
-  end
-end
+require "artisan/safety"
 
 module Artisan
   module Elements
@@ -28,7 +24,7 @@ module Artisan
     end
 
     def element!(element, attributes = {})
-      @artisan_output ||= ""
+      @artisan_output ||= SafeString.new
       if block_given?
         @artisan_output << "<#{element}#{Elements.format_attributes(attributes)}>"
         unless (content = yield.to_s) == @artisan_output
