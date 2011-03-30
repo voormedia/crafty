@@ -20,11 +20,13 @@ module Artisan
       end
     end
 
-    def element!(element, attributes = {})
+    def element!(element, *arguments)
       ensure_building! do
-        if block_given?
+        attributes = arguments.pop if arguments.last.kind_of?(Hash)
+        content = arguments.first
+        if content or block_given?
           @artisan_output << "<#{element}#{Elements.format_attributes(attributes)}>"
-          unless (content = yield) == @artisan_output
+          unless (content ||= yield) == @artisan_output
             @artisan_output << Elements.escape(content.to_s)
           end
           @artisan_output << "</#{element}>"

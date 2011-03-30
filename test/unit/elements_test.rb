@@ -21,6 +21,10 @@ class ElementsTest < Test::Unit::TestCase
   end
 
   test "element should return element with given name and content" do
+    assert_equal %Q{<el>content</el>}, @object.element!("el", "content")
+  end
+
+  test "element should return element with given name and content in block" do
     assert_equal %Q{<el>content</el>}, @object.element!("el") { "content" }
   end
 
@@ -38,6 +42,11 @@ class ElementsTest < Test::Unit::TestCase
   end
 
   test "element should return element with given name and attributes and content" do
+    assert_equal %Q{<el attr="val" prop="value">content</el>},
+      @object.element!("el", "content", :attr => "val", :prop => "value")
+  end
+
+  test "element should return element with given name and attributes and content in block" do
     assert_equal %Q{<el attr="val" prop="value">content</el>},
       @object.element!("el", :attr => "val", :prop => "value") { "content" }
   end
