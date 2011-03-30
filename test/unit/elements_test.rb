@@ -42,6 +42,27 @@ class ElementsTest < Test::Unit::TestCase
       @object.element!("el", :attr => "val", :prop => "value") { "content" }
   end
 
+  test "element should return element with given name and attributes with symbol values" do
+    assert_equal %Q{<el attr="val"/>}, @object.element!("el", :attr => :val)
+  end
+
+  # Advanced functionality ===================================================
+  test "comment should return comment" do
+    assert_equal "<!-- commented -->", @object.comment!("commented")
+  end
+
+  test "instruct should return xml processing instruction" do
+    assert_equal %Q{<?xml version="1.0" encoding="UTF-8"?>}, @object.instruct!
+  end
+
+  test "instruct should return custom processing instruction" do
+    assert_equal %Q{<?foo attr="instr"?>}, @object.instruct!("foo", :attr => "instr")
+  end
+
+  test "write should append directly to output stream" do
+    assert_equal %Q{foobar}, @object.write!("foobar")
+  end
+
   # Escaping =================================================================
   test "element should return element with given name and escaped content" do
     assert_equal %Q{<el>content &amp; &quot;info&quot; &lt; &gt;</el>},
@@ -51,6 +72,18 @@ class ElementsTest < Test::Unit::TestCase
   test "element should return element with given name and escaped attributes" do
     assert_equal %Q{<el attr="&quot;attrib&quot;" prop="a &gt; 1 &amp; b &lt; 4"/>},
       @object.element!("el", :attr => %Q{"attrib"}, :prop => "a > 1 & b < 4")
+  end
+
+  test "comment should return escaped comment" do
+    assert_equal "<!-- remarked &amp; commented -->", @object.comment!("remarked & commented")
+  end
+
+  test "instruct should return instruction with escaped attributes" do
+    assert_equal %Q{<?foo comment="1 &lt; 2"?>}, @object.instruct!("foo", :comment => "1 < 2")
+  end
+
+  test "write should not escape output" do
+    assert_equal %Q{foo & bar}, @object.write!("foo & bar")
   end
 
   test "element should not escape content that has been marked as html safe" do
