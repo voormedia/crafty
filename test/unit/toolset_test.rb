@@ -28,6 +28,16 @@ class ToolsetTest < Test::Unit::TestCase
     assert_equal nil, object.b {}
   end
 
+  test "toolset should not override existing method when included twice" do
+    toolset = @toolset
+    object = Class.new do
+      def b; end
+      include toolset
+      include toolset
+    end.new
+    assert_equal nil, object.b {}
+  end
+
   test "toolset should not override existing method from ancestor" do
     toolset = @toolset
     conflict = Module.new do

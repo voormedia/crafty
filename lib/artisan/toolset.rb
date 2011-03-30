@@ -4,7 +4,7 @@ module Artisan
       def create(elements = [], empty_elements = [])
         Module.new do
           def self.append_features(mod)
-            redefined = mod.instance_methods & self.instance_methods
+            redefined = mod.instance_methods & self.instance_methods(false)
             if redefined.any?
               dup.tap do |safe|
                 redefined.each do |method|
