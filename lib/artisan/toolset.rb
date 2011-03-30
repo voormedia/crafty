@@ -20,8 +20,8 @@ module Artisan
 
           elements.each do |element|
             module_eval <<-RUBY, __FILE__, __LINE__ + 1
-              def #{element}(attributes = nil)
-                element!("#{element}", attributes, &Proc.new)
+              def #{element}(*args, &block)
+                element!("#{element}", *args, &block)
               end
             RUBY
           end

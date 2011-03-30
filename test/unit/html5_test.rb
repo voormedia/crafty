@@ -10,9 +10,16 @@ class HTML5Test < Test::Unit::TestCase
     assert_equal Artisan::HTML, Artisan::HTML5
   end
 
+  test "div should return content with given attributes" do
+    assert_equal %Q{<div class="green">Hello</div>}, @object.div(:class => "green") { "Hello" }
+  end
+
   test "a should return anchor with given attributes" do
-    assert_equal %Q{<a href="http://example.org">link</a>},
-      @object.a(:href => "http://example.org") { "link" }
+    assert_equal %Q{<a href="http://example.org">link</a>}, @object.a("link", :href => "http://example.org")
+  end
+
+  test "title should return title with content" do
+    assert_equal %Q{<title>Hello</title>}, @object.title("Hello")
   end
 
   # Examples =================================================================
