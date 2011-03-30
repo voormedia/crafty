@@ -1,5 +1,15 @@
 require File.expand_path("../test_helper", File.dirname(__FILE__))
 
+class Object
+  def html_safe
+    obj = dup
+    class << obj
+      def html_safe?; true; end
+    end
+    obj
+  end
+end
+
 class ElementsTest < Test::Unit::TestCase
   def setup
     @object = Class.new { include Artisan::Elements }.new
@@ -44,11 +54,13 @@ class ElementsTest < Test::Unit::TestCase
   end
 
   test "element should not escape content that has been marked as html safe" do
-    html = "<safe></safe>"
-    class << html
-      def html_safe?; true; end
-    end
+    html = "<safe></safe>".html_safe
     assert_equal %Q{<el><safe></safe></el>}, @object.element!("el") { html }
+  end
+
+  test "element should escape attributes even if they have been marked as html safe" do
+    html = "<safe></safe>".html_safe
+    assert_equal %Q{<el attr="&lt;safe&gt;&lt;/safe&gt;"/>}, @object.element!("el", :attr => html)
   end
 
   # Building =================================================================

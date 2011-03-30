@@ -13,12 +13,16 @@ module Artisan
         return if attributes.nil?
         output = ""
         attributes.each do |name, value|
-          output << %Q{ #{name}="#{escape(value)}"}
+          output << %Q{ #{name}="#{escape!(value)}"}
         end
         output
       end
 
       def escape(content)
+        if content.html_safe? then content else escape!(content) end
+      end
+
+      def escape!(content)
         content.gsub(/[&><"]/) { |char| ESCAPE_SEQUENCE[char] }
       end
     end
@@ -28,11 +32,7 @@ module Artisan
       if block_given?
         @artisan_output << "<#{element}#{Elements.format_attributes(attributes)}>"
         unless (content = yield.to_s) == @artisan_output
-          if content.html_safe?
-            @artisan_output << content
-          else
-            @artisan_output << Elements.escape(content)
-          end
+          @artisan_output << Elements.escape(content)
         end
         @artisan_output << "</#{element}>"
       else
