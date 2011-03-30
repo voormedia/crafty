@@ -182,13 +182,13 @@ class Artis
   def render(url)
     html do
       head do
-        title { "happy title" }
+        title "happy title"
       end
 
       body do
-        h1 { "happy heading" }
+        h1 "happy heading"
         10.times do
-          a(:href => url) { "a link" }
+          a "a link", :href => url
         end
         nil
       end
