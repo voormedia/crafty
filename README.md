@@ -1,9 +1,9 @@
 Crafty – build HTML like a craftsman
-=====================================
+====================================
 
-Crafty allows you to easily and flexibly craft HTML output. It is inspired
-by Builder and Markaby, but is simpler and more flexible. Its goal is to
-provide simple helpers that allow you to build HTML markup in any class.
+Crafty allows you to easily and flexibly craft HTML output. It is inspired by
+Builder and Markaby, but is simpler and more flexible. Its goal is to provide
+simple helpers that allow you to build HTML markup in any class.
 
 Synopsis
 --------
@@ -11,7 +11,7 @@ Synopsis
     require "crafty"
 
     class Widget
-      include Crafty::HTML
+      include Crafty::HTML::Basic
 
       def initialize(target)
         @target = target
@@ -20,7 +20,7 @@ Synopsis
       def render
         html do
           head do
-            title { "Hello" }
+            title "Hello"
           end
           body do
             render_content
@@ -30,7 +30,7 @@ Synopsis
 
       def render_content
         div class: "main" do
-          p { "Hello, #{@target}!" }
+          p "Hello, #{@target}!"
         end
       end
     end
