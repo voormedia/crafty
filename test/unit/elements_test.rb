@@ -80,6 +80,13 @@ class ElementsTest < Test::Unit::TestCase
     assert_equal %Q{foobar}, @object.write!("foobar")
   end
 
+  test "build should collect output" do
+    assert_equal %Q{<el/><el/>}, @object.build! {
+      @object.element!("el")
+      @object.element!("el")
+    }
+  end
+
   # Escaping =================================================================
   test "element should return element with given name and escaped content" do
     assert_equal %Q{<el>content &amp; &quot;info&quot; &lt; &gt;</el>},

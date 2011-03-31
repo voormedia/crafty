@@ -59,8 +59,6 @@ module Artisan
     end
     alias_method :write!, :text!
 
-    private
-
     def build!
       if @artisan_output
         yield
