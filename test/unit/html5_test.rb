@@ -14,6 +14,10 @@ class HTML5Test < Test::Unit::TestCase
     assert_equal %Q{<div class="green">Hello</div>}, @object.div(:class => "green") { "Hello" }
   end
 
+  test "div should return closing tag without content" do
+    assert_equal %Q{<div class="green"></div>}, @object.div(:class => "green")
+  end
+
   test "a should return anchor with given attributes" do
     assert_equal %Q{<a href="http://example.org">link</a>}, @object.a("link", :href => "http://example.org")
   end

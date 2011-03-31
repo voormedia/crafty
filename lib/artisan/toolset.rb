@@ -20,8 +20,9 @@ module Artisan
 
           elements.each do |element|
             module_eval <<-RUBY, __FILE__, __LINE__ + 1
-              def #{element}(*args, &block)
-                element!("#{element}", *args, &block)
+              def #{element}(*arguments, &block)
+                arguments.unshift("") if !arguments.first.kind_of?(String) && !block
+                element!("#{element}", *arguments, &block)
               end
             RUBY
           end
