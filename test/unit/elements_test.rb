@@ -97,6 +97,10 @@ class ElementsTest < Test::Unit::TestCase
       @object.element!("el", "content", :attr => ["val1", [[nil, "val2"], "val3"]])
   end
 
+  test "attribute values as empty array should be omitted" do
+    assert_equal %Q{<el>content</el>}, @object.element!("el", "content", :attr => [])
+  end
+
   # Escaping =================================================================
   test "element should return element with given name and escaped content" do
     assert_equal %Q{<el>content &amp; &quot;info&quot; &lt; &gt;</el>},
