@@ -4,32 +4,36 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{artisan}
+  s.name = %q{crafty}
   s.version = "0.0.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Rolf Timmermans"]
-  s.date = %q{2011-03-30}
-  s.description = %q{Artisan provides you the tools to easily and flexibly craft HTML output.}
+  s.date = %q{2011-04-01}
+  s.description = %q{Crafty provides you the tools to easily and flexibly create HTML output with pure Ruby.}
   s.email = %q{r.timmermans@voormedia.com}
+  s.extra_rdoc_files = [
+    "LICENSE",
+    "README.md"
+  ]
   s.files = [
+    "LICENSE",
+    "README.md",
     "Rakefile",
     "VERSION",
-    "lib/artisan.rb",
-    "lib/artisan/elements.rb",
-    "lib/artisan/toolset.rb",
-    "lib/artisan/toolsets/html5.rb",
+    "benchmark/bench.rb",
     "test/test_helper.rb",
     "test/unit/elements_test.rb",
-    "test/unit/html5_test.rb"
+    "test/unit/toolset_test.rb"
   ]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.5.2}
-  s.summary = %q{Artisan tools for HTML crafting.}
+  s.summary = %q{Build HTML like a master craftsman.}
   s.test_files = [
     "test/test_helper.rb",
     "test/unit/elements_test.rb",
-    "test/unit/html5_test.rb"
+    "test/unit/html_test.rb",
+    "test/unit/toolset_test.rb"
   ]
 
   if s.respond_to? :specification_version then

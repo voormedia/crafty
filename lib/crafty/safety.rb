@@ -4,7 +4,7 @@ class Object
   end
 end
 
-module Artisan
+module Crafty
   class SafeString < String
     def html_safe?
       true

@@ -2,14 +2,14 @@ require File.expand_path("../test_helper", File.dirname(__FILE__))
 
 class ToolsetTest < Test::Unit::TestCase
   def setup
-    @toolset = Artisan::Toolset.create(%w{a b c d})
+    @toolset = Module.new { Crafty::Toolset.define(self, %w{a b c d}) }
   end
 
   # Basic functionality ======================================================
   test "toolset should include methods" do
     toolset = @toolset
     object = Class.new { include toolset }.new
-    assert_equal "<a></a>", object.a {}
+    assert_equal "<a></a>", object.a
   end
 
   test "toolset should include elements" do

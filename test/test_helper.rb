@@ -1,7 +1,7 @@
 require "rubygems"
 require "bundler/setup"
 require "test/unit"
-require "artisan"
+require "crafty"
 
 class Test::Unit::TestCase
   class << self

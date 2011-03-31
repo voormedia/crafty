@@ -1,17 +1,17 @@
-Artisan – build HTML like a craftsman
+Crafty – build HTML like a craftsman
 =====================================
 
-Artisan allows you to easily and flexibly craft HTML output. It is inspired
+Crafty allows you to easily and flexibly craft HTML output. It is inspired
 by Builder and Markaby, but is simpler and more flexible. Its goal is to
 provide simple helpers that allow you to build HTML markup in any class.
 
 Synopsis
 --------
 
-    require "artisan"
+    require "crafty"
 
     class Widget
-      include Artisan::HTML
+      include Crafty::HTML
 
       def initialize(target)
         @target = target
@@ -41,17 +41,17 @@ Synopsis
 Requirements
 ------------
 
-Artisan has no requirements other than Ruby (tested with 1.8.7+).
+Crafty has no requirements other than Ruby (tested with 1.8.7+).
 
 Installation
 ------------
 
-    gem install artisan
+    gem install crafty
 
-About Artisan
+About Crafty
 -------------
 
-Artisan was created by Rolf Timmermans (r.timmermans *at* voormedia.com)
+Crafty was created by Rolf Timmermans (r.timmermans *at* voormedia.com)
 
 Copyright 2010-2011 Voormedia - [www.voormedia.com](http://www.voormedia.com/)
 
@@ -59,5 +59,5 @@ Copyright 2010-2011 Voormedia - [www.voormedia.com](http://www.voormedia.com/)
 License
 -------
 
-Artisan is released under the MIT license.
+Crafty is released under the MIT license.
 

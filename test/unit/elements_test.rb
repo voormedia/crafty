@@ -12,7 +12,7 @@ end
 
 class ElementsTest < Test::Unit::TestCase
   def setup
-    @object = Class.new { include Artisan::Elements }.new
+    @object = Class.new { include Crafty::Elements }.new
   end
 
   # Basic element functionality ==============================================
@@ -165,7 +165,7 @@ class ElementsTest < Test::Unit::TestCase
   end
 
   test "element should append to object that responds to arrows" do
-    object = Class.new(Array) { include Artisan::Elements }.new
+    object = Class.new(Array) { include Crafty::Elements }.new
     assert_equal ["<el><nest>content</nest><nested>more content</nested></el>"],
       object.element!("el") {
         object.element!("nest") { "content" }
@@ -174,7 +174,7 @@ class ElementsTest < Test::Unit::TestCase
   end
 
   test "element should append html safe strings to object that responds to arrows" do
-    object = Class.new(Array) { include Artisan::Elements }.new
+    object = Class.new(Array) { include Crafty::Elements }.new
     result = object.element!("el") {
       object.element!("nest") { "content" }
       object.element!("nested") { "more content" }

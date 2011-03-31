@@ -6,7 +6,7 @@ require "benchmark"
 require "rubygems"
 
 $: << File.expand_path("../../lib", __FILE__)
-require "artisan"
+require "crafty"
 require "nokogiri"
 require "haml"
 require "erubis"
@@ -176,8 +176,8 @@ def do_nokogiri url
   html.to_s
 end
 
-class Artis
-  include Artisan::HTML
+class Cr
+  include Crafty::HTML::Basic
 
   def render(url)
     html do
@@ -196,12 +196,12 @@ class Artis
   end
 end
 
-def do_artisan url
-  Artis.new.render(url)
+def do_crafty url
+  Cr.new.render(url)
 end
 
 
-engines = %w{artisan tagz erector erector_mixin nokogiri builder haml erubis markaby}
+engines = %w{crafty tagz erector erector_mixin nokogiri builder haml erubis markaby}
 
 previous = nil
 previous_engine = nil

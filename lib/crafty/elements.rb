@@ -1,6 +1,6 @@
-require "artisan/safety"
+require "crafty/safety"
 
-module Artisan
+module Crafty
   module Elements
     ESCAPE_SEQUENCE = { "&" => "&amp;", ">" => "&gt;", "<" => "&lt;", '"' => "&quot;" }
 
@@ -29,22 +29,22 @@ module Artisan
         attributes = arguments.pop if arguments.last.kind_of?(Hash)
         content = arguments.first
         if content or block_given?
-          @artisan_output << "<#{element}#{Elements.format_attributes(attributes)}>"
-          unless (content ||= yield) == @artisan_output
-            @artisan_output << Elements.escape(content.to_s)
+          @crafty_output << "<#{element}#{Elements.format_attributes(attributes)}>"
+          unless (content ||= yield) == @crafty_output
+            @crafty_output << Elements.escape(content.to_s)
           end
-          @artisan_output << "</#{element}>"
+          @crafty_output << "</#{element}>"
         else
-          @artisan_output << "<#{element}#{Elements.format_attributes(attributes)}/>"
+          @crafty_output << "<#{element}#{Elements.format_attributes(attributes)}/>"
         end
       end
     end
 
     def comment!(content)
       build! do
-        @artisan_output << "<!-- "
-        @artisan_output << Elements.escape(content.to_s)
-        @artisan_output << " -->"
+        @crafty_output << "<!-- "
+        @crafty_output << Elements.escape(content.to_s)
+        @crafty_output << " -->"
       end
     end
 
@@ -54,27 +54,27 @@ module Artisan
         attributes = { :version => "1.0", :encoding => "UTF-8" }
       end
       build! do
-        @artisan_output << "<?#{name}#{Elements.format_attributes(attributes)}?>"
+        @crafty_output << "<?#{name}#{Elements.format_attributes(attributes)}?>"
       end
     end
 
     def text!(content)
       build! do
-        @artisan_output << Elements.escape(content.to_s)
+        @crafty_output << Elements.escape(content.to_s)
       end
     end
     alias_method :write!, :text!
 
     def build!
-      if @artisan_output
+      if @crafty_output
         yield
       else
         begin
-          @artisan_output = SafeString.new
+          @crafty_output = SafeString.new
           yield
-          if respond_to? :<< then self << @artisan_output else @artisan_output end
+          if respond_to? :<< then self << @crafty_output else @crafty_output end
         ensure
-          @artisan_output = nil
+          @crafty_output = nil
         end
       end
     end
