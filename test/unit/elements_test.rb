@@ -87,6 +87,16 @@ class ElementsTest < Test::Unit::TestCase
     }
   end
 
+  test "attribute values as array should be joined with spaces" do
+    assert_equal %Q{<el attr="val1 val2 val3">content</el>},
+      @object.element!("el", "content", :attr => ["val1", "val2", "val3"])
+  end
+
+  test "attribute values as array should be flattened and compacted and joined with spaces" do
+    assert_equal %Q{<el attr="val1 val2 val3">content</el>},
+      @object.element!("el", "content", :attr => ["val1", [[nil, "val2"], "val3"]])
+  end
+
   # Escaping =================================================================
   test "element should return element with given name and escaped content" do
     assert_equal %Q{<el>content &amp; &quot;info&quot; &lt; &gt;</el>},

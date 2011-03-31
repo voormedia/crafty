@@ -8,6 +8,7 @@ module Artisan
       def format_attributes(attributes)
         return if attributes.nil?
         attributes.collect do |name, value|
+          value = value.flatten.compact * " " if value.kind_of? Array
           %Q{ #{name}="#{escape(value.to_s)}"}
         end.join
       end
