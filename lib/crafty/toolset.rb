@@ -2,6 +2,9 @@ module Crafty
   module Toolset
     class << self
       def define(mod, elements = [], empty_elements = [])
+        define_elements(mod, elements)
+        define_empty_elements(mod, empty_elements)
+
         mod.module_eval do
           include Tools
 
@@ -18,7 +21,9 @@ module Crafty
             end
           end
         end
+      end
 
+      def define_elements(mod, elements)
         elements.each do |element|
           mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
             def #{element}(*arguments, &block)
@@ -28,8 +33,10 @@ module Crafty
             end
           RUBY
         end
+      end
 
-        empty_elements.each do |element|
+      def define_empty_elements(mod, elements)
+        elements.each do |element|
           mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
             def #{element}(attributes = nil)
               element!("#{element}", nil, attributes)

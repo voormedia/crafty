@@ -172,10 +172,10 @@ class ToolsTest < Test::Unit::TestCase
   end
 
   test "element should be nestable and chainable without concatenation" do
-    assert_equal %Q{<el><nest>content</nest><nested>more content</nested></el>},
+    assert_equal %Q{<el><nest>content</nest><nested>more &amp; content</nested></el>},
       @object.element!("el") {
         @object.element!("nest") { "content" }
-        @object.element!("nested") { "more content" }
+        @object.element!("nested") { "more & content" }
       }
   end
 
@@ -187,9 +187,9 @@ class ToolsTest < Test::Unit::TestCase
     object = Class.new(Array) { include Crafty::Tools }.new
     object.element!("el") {
       object.element!("nest") { "content" }
-      object.element!("nested") { "more content" }
+      object.element!("nested") { "more & content" }
     }
-    assert_equal ["<el>", "<nest>", "content", "</nest>", "<nested>", "more content", "</nested>", "</el>"], object
+    assert_equal ["<el>", "<nest>", "content", "</nest>", "<nested>", "more &amp; content", "</nested>", "</el>"], object
   end
 
   test "element should return nil if appending to object that responds to arrows" do
@@ -201,7 +201,7 @@ class ToolsTest < Test::Unit::TestCase
     object = Class.new(Array) { include Crafty::Tools }.new
     object.element!("el") {
       object.element!("nest") { "content" }
-      object.element!("nested") { "more content" }
+      object.element!("nested") { "more & content" }
     }
     assert_equal [true] * object.length, object.map(&:html_safe?)
   end
