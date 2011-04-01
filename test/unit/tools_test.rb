@@ -1,15 +1,5 @@
 require File.expand_path("../test_helper", File.dirname(__FILE__))
 
-class Object
-  def html_safe
-    obj = dup
-    class << obj
-      def html_safe?; true; end
-    end
-    obj
-  end
-end
-
 class ToolsTest < Test::Unit::TestCase
   def setup
     @object = Class.new { include Crafty::Tools }.new
@@ -154,17 +144,17 @@ class ToolsTest < Test::Unit::TestCase
   end
 
   test "element should not escape content that has been marked as html safe" do
-    html = "<safe></safe>".html_safe
+    html = Crafty::SafeString.new("<safe></safe>")
     assert_equal %Q{<el><safe></safe></el>}, @object.element!("el") { html }
   end
 
   test "element should not escape attributes that have been marked as html safe" do
-    html = "http://example.org/?q=example&amp;a=search".html_safe
+    html = Crafty::SafeString.new("http://example.org/?q=example&amp;a=search")
     assert_equal %Q{<el attr="http://example.org/?q=example&amp;a=search"/>}, @object.element!("el", nil, :attr => html)
   end
 
   test "write should not escape output that has been marked as html safe" do
-    assert_equal %Q{foo &amp; bar}, @object.write!("foo &amp; bar".html_safe)
+    assert_equal %Q{foo &amp; bar}, @object.write!(Crafty::SafeString.new("foo &amp; bar"))
   end
 
   test "element should return html safe string" do
@@ -202,12 +192,43 @@ class ToolsTest < Test::Unit::TestCase
     assert_equal ["<el>", "<nest>", "content", "</nest>", "<nested>", "more &amp; content", "</nested>", "</el>"], object
   end
 
+  test "element should escape content if appending to object that responds to arrows" do
+    object = Class.new(Array) { include Crafty::Tools }.new
+    content = "foo & bar"
+    object.element!("el", content)
+    assert_equal ["<el>", "foo &amp; bar",  "</el>"], object
+  end
+
   test "element should return nil if appending to object that responds to arrows" do
     object = Class.new(Array) { include Crafty::Tools }.new
     assert_nil object.element!("el")
   end
 
-  test "element should append html safe strings to object that responds to arrows" do
+  test "element should append html safe strings to object that responds to arrows if html safe exists" do
+    begin
+      String.class_eval do
+        def html_safe
+          obj = dup
+          class << obj
+            def html_safe?; true end
+          end
+          obj
+        end
+      end
+      object = Class.new(Array) { include Crafty::Tools }.new
+      object.element!("el") {
+        object.element!("nest") { "content" }
+        object.element!("nested") { "more & content" }
+      }
+      assert_equal [true] * object.length, object.map(&:html_safe?)
+    ensure
+      String.class_eval do
+        undef_method :html_safe
+      end
+    end
+  end
+
+  test "element should append html safe strings to object that responds to arrows if html safe does not exist" do
     object = Class.new(Array) { include Crafty::Tools }.new
     object.element!("el") {
       object.element!("nest") { "content" }

@@ -24,11 +24,7 @@ module Crafty
     end
 
     def <<(data)
-      @base << if data.respond_to?(:html_safe)
-        data.html_safe
-      else
-        data
-      end
+      @base << SafeString.new(data)
     end
 
     def render
