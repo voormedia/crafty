@@ -19,6 +19,10 @@ class HTMLBase < Test::Unit::TestCase
       assert_equal %Q{<div></div>}, @object.div
     end
 
+    test "div should not be self closing with nil block" do
+      assert_equal %Q{<div></div>}, @object.div { nil }
+    end
+
     test "div should return closing tag without content" do
       assert_equal %Q{<div class="green"></div>}, @object.div(:class => "green")
     end

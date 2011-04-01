@@ -40,18 +40,18 @@ module Crafty
       end
     end
 
-    def element!(element, content = nil, attributes = nil)
+    def element!(name, content = nil, attributes = nil)
       build! do
         if content or block_given?
-          @_crafted << "<#{element}#{Tools.format_attributes(attributes)}>"
+          @_crafted << "<#{name}#{Tools.format_attributes(attributes)}>"
           if block_given?
             value = yield
             content = value unless @_appended
           end
           @_crafted << Tools.escape(content.to_s) if content
-          @_crafted << "</#{element}>"
+          @_crafted << "</#{name}>"
         else
-          @_crafted << "<#{element}#{Tools.format_attributes(attributes)}/>"
+          @_crafted << "<#{name}#{Tools.format_attributes(attributes)}/>"
         end
       end
     end
@@ -102,10 +102,6 @@ module Crafty
           @_crafted = nil
         end
       end
-    end
-
-    def concat!(data)
-      @_crafted << data
     end
   end
 end
