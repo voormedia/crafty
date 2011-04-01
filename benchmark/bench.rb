@@ -3,7 +3,7 @@
 require "benchmark"
 require "rubygems"
 
-max = (ARGV.shift || 20_000).to_i
+max = 20_000
 
 class String
   def smush!

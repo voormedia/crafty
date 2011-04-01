@@ -17,9 +17,14 @@ end
 
 task :default => [:generate, :test]
 
+desc "Benchmark Crafty against various other HTML builders"
+task :bench do
+  require File.expand_path("benchmark/bench", File.dirname(__FILE__))
+end
+
 desc "Regenerate toolsets"
 task :generate do
-  require File.expand_path("../src/elements", __FILE__)
+  require File.expand_path("src/elements", File.dirname(__FILE__))
 
   def simple_format(text, len = 73, indent = 6)
     sentences = [[]]
