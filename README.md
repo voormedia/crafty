@@ -62,19 +62,19 @@ Helper modules
 
 You can choose from one of the following helper modules:
 
-* `Crafty::HTML::Basic`: A simple subset of all HTML elements, that is enough
-  for most layouts. It includes all basic elements to construct most HTML
-  layouts.
+* `Crafty::HTML::Basic`: A simple subset of all HTML elements, enough
+  for most HTML layouts.
 
-* `Crafty::HTML::Forms`: All HTML elements that are related to form building.
-  If you use Rails, note that the names of some of these elements conflict
-  with Rails helpers, such as `label` and `input`.
+* `Crafty::HTML::Forms`: All HTML elements that are related to forms. If you
+  use Rails, note that the names of some of these elements conflict with Rails
+  helpers (such as `label` and `input`).
 
 * `Crafty::HTML::Semantic`: Juicy new HTML5 elements such as `header`,
   `footer`, `nav`, etc.
 
-* `Crafty::HTML::All`: All existing HTML5 elements. If you use Rails, note
-  that some elements might conflict with Rails helpers.
+* `Crafty::HTML::All`: All HTML5 elements that are defined in the HTML5 draft
+  spec. If you use Rails, note that some elements might conflict with Rails
+  helpers.
 
 You can also choose to use `Crafty::HTML4::Basic`, `Crafty::HTML4::Forms` and
 `Crafty::HTML4::All` instead. These modules provide helpers for HTML4/XHTML
@@ -89,7 +89,7 @@ helpers in responds to `<<`, Crafty will push any output directly onto the
 current object. This allows you to create builder classes that can stream
 output. Observe how it works with this contrived example:
 
-    class StreamingWidget < Array   # Subclass Array to demonstrate <<
+    class StreamingWidget < Array   # Subclass Array to demonstrate '<<'
       include Crafty::HTML::Basic
 
       def render(target)
