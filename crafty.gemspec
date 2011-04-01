@@ -22,8 +22,25 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "benchmark/bench.rb",
+    "benchmark/builder.rb",
+    "benchmark/crafty.rb",
+    "benchmark/erector.rb",
+    "benchmark/erubis.rb",
+    "benchmark/haml.rb",
+    "benchmark/markaby.rb",
+    "benchmark/nokogiri.rb",
+    "benchmark/tagz.rb",
+    "crafty.gemspec",
+    "lib/crafty.rb",
+    "lib/crafty/safety.rb",
+    "lib/crafty/tools.rb",
+    "lib/crafty/toolset.rb",
+    "lib/crafty/toolsets/html4.rb",
+    "lib/crafty/toolsets/html5.rb",
+    "src/elements.rb",
     "test/test_helper.rb",
-    "test/unit/elements_test.rb",
+    "test/unit/html_test.rb",
+    "test/unit/tools_test.rb",
     "test/unit/toolset_test.rb"
   ]
   s.require_paths = ["lib"]
@@ -31,8 +48,8 @@ Gem::Specification.new do |s|
   s.summary = %q{Build HTML like a master craftsman.}
   s.test_files = [
     "test/test_helper.rb",
-    "test/unit/elements_test.rb",
     "test/unit/html_test.rb",
+    "test/unit/tools_test.rb",
     "test/unit/toolset_test.rb"
   ]
 
