@@ -31,10 +31,11 @@ module Crafty
         if content or block_given?
           concat! "<#{element}#{Elements.format_attributes(attributes)}>"
           if block_given?
-            yield
-          else
-            concat! Elements.escape(content.to_s)
+            prev_len = @crafty_output.length
+            res = yield
+            content = res if @crafty_output.length == prev_len
           end
+          concat! Elements.escape(content.to_s) if content
           concat! "</#{element}>"
         else
           concat! "<#{element}#{Elements.format_attributes(attributes)}/>"
@@ -70,6 +71,7 @@ module Crafty
     def build!
       if @crafty_output
         yield
+        nil
       else
         begin
           @crafty_output = SafeString.new

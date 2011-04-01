@@ -29,15 +29,22 @@ class ElementsTest < Test::Unit::TestCase
   end
 
   test "element should return element with given name and content in block" do
-    assert_equal %Q{<el>content</el>}, @object.element!("el") { @object.write! "content" }
+    assert_equal %Q{<el>content</el>}, @object.element!("el") { "content" }
+  end
+
+  test "element should return element with given name and built content without block return value" do
+    assert_equal %Q{<el><el>content</el></el>}, @object.element!("el") {
+      @object.element!("el") { "content" }
+      "foo"
+    }
   end
 
   test "element should return element with given name and no content" do
-    assert_equal %Q{<el></el>}, @object.element!("el") { @object.write! nil }
+    assert_equal %Q{<el></el>}, @object.element!("el") { nil }
   end
 
   test "element should return element with given name and blank content" do
-    assert_equal %Q{<el></el>}, @object.element!("el", "")
+    assert_equal %Q{<el></el>}, @object.element!("el") { "" }
   end
 
   test "element should return element with given name and attributes" do
@@ -52,7 +59,7 @@ class ElementsTest < Test::Unit::TestCase
 
   test "element should return element with given name and attributes and content in block" do
     assert_equal %Q{<el attr="val" prop="value">content</el>},
-      @object.element!("el", :attr => "val", :prop => "value") { @object.write! "content" }
+      @object.element!("el", :attr => "val", :prop => "value") { "content" }
   end
 
   test "element should return element with given name and attributes with symbol values" do
@@ -130,7 +137,7 @@ class ElementsTest < Test::Unit::TestCase
 
   test "element should not escape content that has been marked as html safe" do
     html = "<safe></safe>".html_safe
-    assert_equal %Q{<el><safe></safe></el>}, @object.element!("el") { @object.write! html }
+    assert_equal %Q{<el><safe></safe></el>}, @object.element!("el") { html }
   end
 
   test "element should not escape attributes that have been marked as html safe" do
@@ -153,26 +160,26 @@ class ElementsTest < Test::Unit::TestCase
   # Building =================================================================
   test "element should be nestable" do
     assert_equal %Q{<el><nested>content</nested></el>},
-      @object.element!("el") { @object.element!("nested") { @object.write! "content" } }
+      @object.element!("el") { @object.element!("nested") { "content" } }
   end
 
   test "element should be nestable and chainable without concatenation" do
     assert_equal %Q{<el><nest>content</nest><nested>more content</nested></el>},
       @object.element!("el") {
-        @object.element!("nest") { @object.write! "content" }
-        @object.element!("nested") { @object.write! "more content" }
+        @object.element!("nest") { "content" }
+        @object.element!("nested") { "more content" }
       }
   end
 
   test "element should be reset state of buffer after being called" do
     assert_equal %Q{<el/><el/>}, @object.element!("el") + @object.element!("el")
   end
-  
+
   test "element should append to object that responds to arrows" do
     object = Class.new(Array) { include Crafty::Elements }.new
     object.element!("el") {
-      object.element!("nest") { object.write! "content" }
-      object.element!("nested") { object.write! "more content" }
+      object.element!("nest") { "content" }
+      object.element!("nested") { "more content" }
     }
     assert_equal ["<el>", "<nest>", "content", "</nest>", "<nested>", "more content", "</nested>", "</el>"], object
   end
@@ -185,8 +192,8 @@ class ElementsTest < Test::Unit::TestCase
   test "element should append html safe strings to object that responds to arrows" do
     object = Class.new(Array) { include Crafty::Elements }.new
     object.element!("el") {
-      object.element!("nest") { object.write! "content" }
-      object.element!("nested") { object.write! "more content" }
+      object.element!("nest") { "content" }
+      object.element!("nested") { "more content" }
     }
     assert_equal [true] * object.length, object.map(&:html_safe?)
   end
