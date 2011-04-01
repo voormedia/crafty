@@ -4,7 +4,7 @@ class HTMLBase < Test::Unit::TestCase
   def test_dummy; end
 
   def self.behaves_as_basic_html
-    # Simple methods ===========================================================
+    # Simple methods =========================================================
     test "div should return content with given attributes" do
       assert_equal %Q{<div class="green">Hello</div>}, @object.div("Hello", :class => "green")
     end
@@ -49,7 +49,19 @@ class HTMLBase < Test::Unit::TestCase
       assert_equal %Q{<br/>}, @object.br { "foo" }
     end
 
-    # Examples =================================================================
+    # Streaming ==============================================================
+    test "html should product stream of strings if object responds to arrows" do
+      @streaming_object.instance_eval do
+        html do
+          head do
+            title "Hi"
+          end
+        end
+      end
+      assert_equal ["<html>", "<head>", "<title>", "Hi", "</title>", "</head>", "</html>"], @streaming_object
+    end
+
+    # Examples ===============================================================
     test "complex nested build calls should render correctly" do
       assert_equal %Q{<html>} +
         %Q{<head><title>my document</title><link href="style.css" rel="stylesheet" type="text/css"/></head>} +
@@ -88,6 +100,7 @@ end
 class HTML5Test < HTMLBase
   def setup
     @object = Class.new { include Crafty::HTML5::Basic }.new
+    @streaming_object = Class.new(Array) { include Crafty::HTML5::Basic }.new
   end
 
   behaves_as_basic_html
@@ -96,6 +109,7 @@ end
 class HTML4Test < HTMLBase
   def setup
     @object = Class.new { include Crafty::HTML4::Basic }.new
+    @streaming_object = Class.new(Array) { include Crafty::HTML4::Basic }.new
   end
 
   behaves_as_basic_html

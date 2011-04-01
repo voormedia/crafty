@@ -3,7 +3,7 @@
 require "benchmark"
 require "rubygems"
 
-max = 20_000
+max = 50_000
 
 class String
   def smush!
@@ -37,7 +37,7 @@ engines.each do |engine|
   previous_engine = engine
 end
 
-puts "# of iterations = #{max}"
+puts "Number of iterations = #{max}"
 Benchmark::bm(20) do |x|
   engines.each do |engine|
     x.report(engine) do
