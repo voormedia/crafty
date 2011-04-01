@@ -1,9 +1,23 @@
 Crafty – build HTML like a craftsman
 ====================================
 
-Crafty allows you to easily and flexibly craft HTML output. It is inspired by
-Builder and Markaby, but is simpler and more flexible. Its goal is to provide
-simple helpers that allow you to build HTML markup in any class.
+Crafty allows you to easily and flexibly craft HTML output with pure Ruby
+code. It is inspired by Builder and Markaby, but is simpler and more flexible.
+Its goal is to provide simple helpers that allow you to build HTML markup in
+any class.
+
+
+Features
+--------
+
+* Crafty is simple and fast.
+
+* HTML element sets are predefined and provided as mix-ins.
+
+* Automatic HTML output escaping, 100% compatible with Rails.
+
+* No `instance_eval` or `method_missing` tricks, just helper methods.
+
 
 Synopsis
 --------
@@ -46,7 +60,13 @@ Crafty has no requirements other than Ruby (tested with 1.8.7+).
 Installation
 ------------
 
+Install as a gem:
+
     gem install crafty
+
+Or add to your project's `Gemfile`:
+
+    gem "crafty"
 
 About Crafty
 -------------
