@@ -94,7 +94,8 @@ You can choose from one of the following helper modules:
 
 You can also choose to use `Crafty::HTML4::Basic`, `Crafty::HTML4::Forms` and
 `Crafty::HTML4::All` instead. These modules provide helpers for HTML4/XHTML
-elements.
+elements. For a complete reference of which elements are included in which
+module, [see the source](https://github.com/voormedia/crafty/tree/master/lib/crafty/toolsets).
 
 
 Output streaming
