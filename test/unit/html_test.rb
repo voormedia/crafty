@@ -7,6 +7,10 @@ class HTMLBase < Test::Unit::TestCase
       assert_equal %Q{<div class="green">Hello</div>}, @object.div("Hello", :class => "green")
     end
 
+    test "div should return content in block with given attributes" do
+      assert_equal %Q{<div class="green">Hello</div>}, @object.div(:class => "green") { "Hello" }
+    end
+
     test "div should return non string content" do
       assert_equal %Q{<div>1234</div>}, @object.div(1234)
     end
@@ -33,6 +37,10 @@ class HTMLBase < Test::Unit::TestCase
 
     test "br should be self closing" do
       assert_equal %Q{<br/>}, @object.br
+    end
+
+    test "br should not accept block content" do
+      assert_equal %Q{<br/>}, @object.br { "foo" }
     end
 
     # Examples =================================================================

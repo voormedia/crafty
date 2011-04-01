@@ -49,7 +49,7 @@ class ToolsTest < Test::Unit::TestCase
 
   test "element should return element with given name and attributes" do
     assert_equal %Q{<el attr="val" prop="value"/>},
-      @object.element!("el", :attr => "val", :prop => "value")
+      @object.element!("el", nil, :attr => "val", :prop => "value")
   end
 
   test "element should return element with given name and attributes and content" do
@@ -59,11 +59,11 @@ class ToolsTest < Test::Unit::TestCase
 
   test "element should return element with given name and attributes and content in block" do
     assert_equal %Q{<el attr="val" prop="value">content</el>},
-      @object.element!("el", :attr => "val", :prop => "value") { "content" }
+      @object.element!("el", nil, :attr => "val", :prop => "value") { "content" }
   end
 
   test "element should return element with given name and attributes with symbol values" do
-    assert_equal %Q{<el attr="val"/>}, @object.element!("el", :attr => :val)
+    assert_equal %Q{<el attr="val"/>}, @object.element!("el", nil, :attr => :val)
   end
 
   # Advanced functionality ===================================================
@@ -128,7 +128,7 @@ class ToolsTest < Test::Unit::TestCase
 
   test "element should return element with given name and escaped attributes" do
     assert_equal %Q{<el attr="&quot;attrib&quot;" prop="a &gt; 1 &amp; b &lt; 4"/>},
-      @object.element!("el", :attr => %Q{"attrib"}, :prop => "a > 1 & b < 4")
+      @object.element!("el", nil, :attr => %Q{"attrib"}, :prop => "a > 1 & b < 4")
   end
 
   test "comment should return escaped comment" do
@@ -150,7 +150,7 @@ class ToolsTest < Test::Unit::TestCase
 
   test "element should not escape attributes that have been marked as html safe" do
     html = "http://example.org/?q=example&amp;a=search".html_safe
-    assert_equal %Q{<el attr="http://example.org/?q=example&amp;a=search"/>}, @object.element!("el", :attr => html)
+    assert_equal %Q{<el attr="http://example.org/?q=example&amp;a=search"/>}, @object.element!("el", nil, :attr => html)
   end
 
   test "write should not escape output that has been marked as html safe" do

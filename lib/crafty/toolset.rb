@@ -22,8 +22,9 @@ module Crafty
         elements.each do |element|
           mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
             def #{element}(*arguments, &block)
-              arguments.unshift("") if arguments.first.kind_of?(Hash) || arguments.empty? && !block
-              element!("#{element}", *arguments, &block)
+              attributes = arguments.pop if arguments.last.kind_of? Hash
+              content = arguments.first || ""
+              element!("#{element}", content, attributes, &block)
             end
           RUBY
         end
@@ -31,7 +32,7 @@ module Crafty
         empty_elements.each do |element|
           mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
             def #{element}(attributes = nil)
-              element!("#{element}", attributes)
+              element!("#{element}", nil, attributes)
             end
           RUBY
         end

@@ -2,9 +2,14 @@ require "crafty/safety"
 
 module Crafty
   module Tools
-    ESCAPE_SEQUENCE = { "&" => "&amp;", ">" => "&gt;", "<" => "&lt;", '"' => "&quot;" }
-
     class << self
+      ESCAPE_SEQUENCE = { "&" => "&amp;", ">" => "&gt;", "<" => "&lt;", '"' => "&quot;" }
+
+      def escape(content)
+        return content if content.html_safe?
+        content.gsub(/[&><"]/) { |char| ESCAPE_SEQUENCE[char] }
+      end
+
       def format_attributes(attributes)
         return if attributes.nil?
         attributes.collect do |name, value|
@@ -26,36 +31,36 @@ module Crafty
         end.join
       end
 
-      def escape(content)
-        return content if content.html_safe?
-        content.gsub(/[&><"]/) { |char| ESCAPE_SEQUENCE[char] }
+      def create_stream(base)
+        if base.respond_to? :<<
+          SafeWrapper.new(base)
+        else
+          SafeString.new
+        end
       end
     end
 
-    def element!(element, *arguments)
+    def element!(element, content = nil, attributes = nil)
       build! do
-        attributes = arguments.pop if arguments.last.kind_of?(Hash)
-        content = arguments.first
         if content or block_given?
-          concat! "<#{element}#{Tools.format_attributes(attributes)}>"
+          @_crafted << "<#{element}#{Tools.format_attributes(attributes)}>"
           if block_given?
-            prev_len = @crafty_output.length
-            res = yield
-            content = res if @crafty_output.length == prev_len
+            value = yield
+            content = value unless @_appended
           end
-          concat! Tools.escape(content.to_s) if content
-          concat! "</#{element}>"
+          @_crafted << Tools.escape(content.to_s) if content
+          @_crafted << "</#{element}>"
         else
-          concat! "<#{element}#{Tools.format_attributes(attributes)}/>"
+          @_crafted << "<#{element}#{Tools.format_attributes(attributes)}/>"
         end
       end
     end
 
     def comment!(content)
       build! do
-        concat! "<!-- "
-        concat! Tools.escape(content.to_s)
-        concat! " -->"
+        @_crafted << "<!-- "
+        @_crafted << Tools.escape(content.to_s)
+        @_crafted << " -->"
       end
     end
 
@@ -65,44 +70,42 @@ module Crafty
         attributes = { :version => "1.0", :encoding => "UTF-8" }
       end
       build! do
-        concat! "<?#{name}#{Tools.format_attributes(attributes)}?>"
+        @_crafted << "<?#{name}#{Tools.format_attributes(attributes)}?>"
       end
     end
 
     def declare!(name, *parameters)
       build! do
-        concat! "<!#{name}#{Tools.format_parameters(parameters)}>"
+        @_crafted << "<!#{name}#{Tools.format_parameters(parameters)}>"
       end
     end
 
     def text!(content)
       build! do
-        concat! Tools.escape(content.to_s)
+        @_crafted << Tools.escape(content.to_s)
       end
     end
     alias_method :write!, :text!
 
     def build!
-      if @crafty_output
+      @_appended = false
+      if @_crafted
         yield
+        @_appended = true
         nil
       else
         begin
-          @crafty_output = SafeString.new
+          @_crafted = Tools.create_stream(self)
           yield
-          @crafty_output unless respond_to? :<<
+          @_crafted.render
         ensure
-          @crafty_output = nil
+          @_crafted = nil
         end
       end
     end
 
     def concat!(data)
-      if respond_to? :<<
-        self << data.html_safe
-      else
-        @crafty_output << data
-      end
+      @_crafted << data
     end
   end
 end
