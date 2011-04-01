@@ -167,22 +167,27 @@ class ElementsTest < Test::Unit::TestCase
   test "element should be reset state of buffer after being called" do
     assert_equal %Q{<el/><el/>}, @object.element!("el") + @object.element!("el")
   end
-
+  
   test "element should append to object that responds to arrows" do
     object = Class.new(Array) { include Crafty::Elements }.new
-    assert_equal ["<el>", "<nest>", "content", "</nest>", "<nested>", "more content", "</nested>", "</el>"],
-      object.element!("el") {
-        object.element!("nest") { object.write! "content" }
-        object.element!("nested") { object.write! "more content" }
-      }
+    object.element!("el") {
+      object.element!("nest") { object.write! "content" }
+      object.element!("nested") { object.write! "more content" }
+    }
+    assert_equal ["<el>", "<nest>", "content", "</nest>", "<nested>", "more content", "</nested>", "</el>"], object
+  end
+
+  test "element should return nil if appending to object that responds to arrows" do
+    object = Class.new(Array) { include Crafty::Elements }.new
+    assert_nil object.element!("el")
   end
 
   test "element should append html safe strings to object that responds to arrows" do
     object = Class.new(Array) { include Crafty::Elements }.new
-    result = object.element!("el") {
+    object.element!("el") {
       object.element!("nest") { object.write! "content" }
       object.element!("nested") { object.write! "more content" }
     }
-    assert_equal [true] * result.length, result.map(&:html_safe?)
+    assert_equal [true] * object.length, object.map(&:html_safe?)
   end
 end

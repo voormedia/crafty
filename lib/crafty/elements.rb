@@ -74,11 +74,7 @@ module Crafty
         begin
           @crafty_output = SafeString.new
           yield
-          if respond_to? :<<
-            self
-          else
-            @crafty_output
-          end
+          @crafty_output unless respond_to? :<<
         ensure
           @crafty_output = nil
         end
