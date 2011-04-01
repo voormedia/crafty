@@ -9,6 +9,8 @@ Jeweler::Tasks.new do |spec|
 
   spec.authors = ["Rolf Timmermans"]
   spec.email = "r.timmermans@voormedia.com"
+
+  spec.files -= Dir["{benchmark,src}/**/*"]
 end
 
 Rake::TestTask.new do |test|
