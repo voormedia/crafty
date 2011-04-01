@@ -13,6 +13,8 @@ Jeweler::Tasks.new do |spec|
   spec.files -= Dir["{benchmark,src}/**/*"]
 end
 
+Jeweler::GemcutterTasks.new
+
 Rake::TestTask.new do |test|
   test.pattern = "test/unit/**/*_test.rb"
 end
