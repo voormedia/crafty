@@ -26,6 +26,20 @@ Features
 Synopsis
 --------
 
+A very simple example:
+
+    require "crafty"
+
+    include Crafty::HTML::Basic
+
+    div class: "green" do
+      h1 "Crafty crafts HTML"
+    end
+    #=> "<div class=\"green\"><h1>Crafty crafts HTML</h1></div>"
+
+
+Another example:
+
     require "crafty"
 
     class Widget
@@ -36,25 +50,27 @@ Synopsis
       end
 
       def render
+        # The first helper method that is called will collect all HTML.
         html do
           head do
             title "Hello"
           end
           body do
+            # Continue building in another method.
             render_content
           end
         end
       end
 
       def render_content
-        div class: "main" do
+        div class: ["main", "content"] do
           p "Hello, #{@target}!"
         end
       end
     end
 
     Widget.new("world").render
-    #=> "<html><head><title>Hello</title></head><body><div class=\"main\"><p>Hello, world!</p></div></body></html>"
+    #=> "<html><head><title>Hello</title></head><body><div class=\"main content\"><p>Hello, world!</p></div></body></html>"
 
 
 Helper modules
