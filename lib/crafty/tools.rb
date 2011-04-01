@@ -46,7 +46,7 @@ module Crafty
           @_crafted << "<#{name}#{Tools.format_attributes(attributes)}>"
           if block_given?
             value = yield
-            content = value unless @_appended
+            content = value if !@_appended or value.kind_of? String
           end
           @_crafted << Tools.escape(content.to_s) if content
           @_crafted << "</#{name}>"

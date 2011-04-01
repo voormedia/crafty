@@ -32,8 +32,14 @@ class ToolsTest < Test::Unit::TestCase
     assert_equal %Q{<el>content</el>}, @object.element!("el") { "content" }
   end
 
-  test "element should return element with given name and built content without block return value" do
-    assert_equal %Q{<el><el>content</el></el>}, @object.element!("el") {
+  test "element should return element with given name and built content without non string block return value" do
+    assert_equal %Q{<el><el>content</el><el>content</el></el>}, @object.element!("el") {
+      2.times { @object.element!("el") { "content" } }
+    }
+  end
+
+  test "element should return element with given name and built content with string block return value" do
+    assert_equal %Q{<el><el>content</el>foo</el>}, @object.element!("el") {
       @object.element!("el") { "content" }
       "foo"
     }
