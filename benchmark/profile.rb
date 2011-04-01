@@ -1,6 +1,6 @@
 require File.expand_path("crafty", File.dirname(__FILE__))
 
-profiler = if RUBY_ENGINE == "rbx"
+profiler = if (RUBY_ENGINE == "rbx" rescue false)
   Rubinius::Profiler::Instrumenter.new
 else
   require "ruby-prof"
@@ -13,7 +13,7 @@ result = profiler.profile do
   end
 end
 
-if RUBY_ENGINE != "rbx"
+if (RUBY_ENGINE != "rbx" rescue true)
   printer = RubyProf::FlatPrinter.new(result)
   printer.print
 end
