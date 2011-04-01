@@ -3,7 +3,7 @@ module Crafty
     class << self
       def define(mod, elements = [], empty_elements = [])
         mod.module_eval do
-          include Elements
+          include Tools
 
           def self.append_features(mod)
             redefined = mod.instance_methods & self.instance_methods(false)

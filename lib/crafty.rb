@@ -1,5 +1,5 @@
 module Crafty
-  autoload :Elements, "crafty/elements"
+  autoload :Tools, "crafty/tools"
   autoload :Toolset, "crafty/toolset"
 
   # Generated HTML toolsets.

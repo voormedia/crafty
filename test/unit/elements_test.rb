@@ -10,9 +10,9 @@ class Object
   end
 end
 
-class ElementsTest < Test::Unit::TestCase
+class ToolsTest < Test::Unit::TestCase
   def setup
-    @object = Class.new { include Crafty::Elements }.new
+    @object = Class.new { include Crafty::Tools }.new
   end
 
   # Basic element functionality ==============================================
@@ -81,6 +81,14 @@ class ElementsTest < Test::Unit::TestCase
 
   test "instruct should return custom processing instruction" do
     assert_equal %Q{<?foo attr="instr"?>}, @object.instruct!("foo", :attr => "instr")
+  end
+
+  test "declare should return declaration" do
+    assert_equal %Q{<!ENTITY greeting "Hello world">}, @object.declare!(:ENTITY, :greeting, "Hello world")
+  end
+
+  test "declare should return empty declaration if there are no parameters" do
+    assert_equal %Q{<!ENTITY>}, @object.declare!("ENTITY")
   end
 
   test "text should append directly to output stream" do
@@ -176,7 +184,7 @@ class ElementsTest < Test::Unit::TestCase
   end
 
   test "element should append to object that responds to arrows" do
-    object = Class.new(Array) { include Crafty::Elements }.new
+    object = Class.new(Array) { include Crafty::Tools }.new
     object.element!("el") {
       object.element!("nest") { "content" }
       object.element!("nested") { "more content" }
@@ -185,12 +193,12 @@ class ElementsTest < Test::Unit::TestCase
   end
 
   test "element should return nil if appending to object that responds to arrows" do
-    object = Class.new(Array) { include Crafty::Elements }.new
+    object = Class.new(Array) { include Crafty::Tools }.new
     assert_nil object.element!("el")
   end
 
   test "element should append html safe strings to object that responds to arrows" do
-    object = Class.new(Array) { include Crafty::Elements }.new
+    object = Class.new(Array) { include Crafty::Tools }.new
     object.element!("el") {
       object.element!("nest") { "content" }
       object.element!("nested") { "more content" }

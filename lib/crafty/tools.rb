@@ -1,7 +1,7 @@
 require "crafty/safety"
 
 module Crafty
-  module Elements
+  module Tools
     ESCAPE_SEQUENCE = { "&" => "&amp;", ">" => "&gt;", "<" => "&lt;", '"' => "&quot;" }
 
     class << self
@@ -18,6 +18,14 @@ module Crafty
         end.join
       end
 
+      def format_parameters(parameters)
+        return if parameters.nil?
+        parameters.collect do |name|
+          name = name.inspect if name.kind_of? String
+          %Q{ #{name}}
+        end.join
+      end
+
       def escape(content)
         return content if content.html_safe?
         content.gsub(/[&><"]/) { |char| ESCAPE_SEQUENCE[char] }
@@ -29,16 +37,16 @@ module Crafty
         attributes = arguments.pop if arguments.last.kind_of?(Hash)
         content = arguments.first
         if content or block_given?
-          concat! "<#{element}#{Elements.format_attributes(attributes)}>"
+          concat! "<#{element}#{Tools.format_attributes(attributes)}>"
           if block_given?
             prev_len = @crafty_output.length
             res = yield
             content = res if @crafty_output.length == prev_len
           end
-          concat! Elements.escape(content.to_s) if content
+          concat! Tools.escape(content.to_s) if content
           concat! "</#{element}>"
         else
-          concat! "<#{element}#{Elements.format_attributes(attributes)}/>"
+          concat! "<#{element}#{Tools.format_attributes(attributes)}/>"
         end
       end
     end
@@ -46,7 +54,7 @@ module Crafty
     def comment!(content)
       build! do
         concat! "<!-- "
-        concat! Elements.escape(content.to_s)
+        concat! Tools.escape(content.to_s)
         concat! " -->"
       end
     end
@@ -57,13 +65,19 @@ module Crafty
         attributes = { :version => "1.0", :encoding => "UTF-8" }
       end
       build! do
-        concat! "<?#{name}#{Elements.format_attributes(attributes)}?>"
+        concat! "<?#{name}#{Tools.format_attributes(attributes)}?>"
+      end
+    end
+
+    def declare!(name, *parameters)
+      build! do
+        concat! "<!#{name}#{Tools.format_parameters(parameters)}>"
       end
     end
 
     def text!(content)
       build! do
-        concat! Elements.escape(content.to_s)
+        concat! Tools.escape(content.to_s)
       end
     end
     alias_method :write!, :text!
