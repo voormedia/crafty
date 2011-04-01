@@ -22,7 +22,7 @@ module Crafty
         elements.each do |element|
           mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
             def #{element}(*arguments, &block)
-              arguments.unshift("") if !arguments.first.kind_of?(String) && !block
+              arguments.unshift("") if arguments.first.kind_of?(Hash) || arguments.empty? && !block
               element!("#{element}", *arguments, &block)
             end
           RUBY

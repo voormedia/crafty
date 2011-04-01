@@ -4,7 +4,15 @@ class HTMLBase < Test::Unit::TestCase
   def self.behaves_as_basic_html
     # Simple methods ===========================================================
     test "div should return content with given attributes" do
-      assert_equal %Q{<div class="green">Hello</div>}, @object.div(:class => "green") { "Hello" }
+      assert_equal %Q{<div class="green">Hello</div>}, @object.div("Hello", :class => "green")
+    end
+
+    test "div should return non string content" do
+      assert_equal %Q{<div>1234</div>}, @object.div(1234)
+    end
+
+    test "div should not be self closing" do
+      assert_equal %Q{<div></div>}, @object.div
     end
 
     test "div should return closing tag without content" do
@@ -20,7 +28,11 @@ class HTMLBase < Test::Unit::TestCase
     end
 
     test "h1 should return h1 header" do
-      assert_equal %Q{<h1>Title</h1>}, @object.h1 { "Title" }
+      assert_equal %Q{<h1>Title</h1>}, @object.h1("Title")
+    end
+
+    test "br should be self closing" do
+      assert_equal %Q{<br/>}, @object.br
     end
 
     # Examples =================================================================
@@ -34,7 +46,7 @@ class HTMLBase < Test::Unit::TestCase
         %Q{</html>}, @object.instance_eval {
         html do
           head do
-            title { "my document" }
+            title "my document"
             link :href => "style.css", :rel => :stylesheet, :type => "text/css"
           end
           body :class => :awesome do
@@ -42,12 +54,12 @@ class HTMLBase < Test::Unit::TestCase
               div {
                 table :cellspacing => 0 do
                   tr {
-                    th { "Col 1" }
-                    th { "Col 2" }
+                    th "Col 1"
+                    th "Col 2"
                   }
                   tr {
-                    td { 10_000 }
-                    td { "content" }
+                    td 10_000
+                    td "content"
                   }
                 end
               }

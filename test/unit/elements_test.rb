@@ -24,16 +24,20 @@ class ElementsTest < Test::Unit::TestCase
     assert_equal %Q{<el>content</el>}, @object.element!("el", "content")
   end
 
+  test "element should return element with given name and non string content" do
+    assert_equal %Q{<el>1234</el>}, @object.element!("el", 1234)
+  end
+
   test "element should return element with given name and content in block" do
-    assert_equal %Q{<el>content</el>}, @object.element!("el") { "content" }
+    assert_equal %Q{<el>content</el>}, @object.element!("el") { @object.write! "content" }
   end
 
   test "element should return element with given name and no content" do
-    assert_equal %Q{<el></el>}, @object.element!("el") { nil }
+    assert_equal %Q{<el></el>}, @object.element!("el") { @object.write! nil }
   end
 
   test "element should return element with given name and blank content" do
-    assert_equal %Q{<el></el>}, @object.element!("el") { "" }
+    assert_equal %Q{<el></el>}, @object.element!("el", "")
   end
 
   test "element should return element with given name and attributes" do
@@ -48,7 +52,7 @@ class ElementsTest < Test::Unit::TestCase
 
   test "element should return element with given name and attributes and content in block" do
     assert_equal %Q{<el attr="val" prop="value">content</el>},
-      @object.element!("el", :attr => "val", :prop => "value") { "content" }
+      @object.element!("el", :attr => "val", :prop => "value") { @object.write! "content" }
   end
 
   test "element should return element with given name and attributes with symbol values" do
@@ -104,7 +108,7 @@ class ElementsTest < Test::Unit::TestCase
   # Escaping =================================================================
   test "element should return element with given name and escaped content" do
     assert_equal %Q{<el>content &amp; &quot;info&quot; &lt; &gt;</el>},
-      @object.element!("el") { %Q{content & "info" < >} }
+      @object.element!("el") { @object.write! %Q{content & "info" < >} }
   end
 
   test "element should return element with given name and escaped attributes" do
@@ -126,7 +130,7 @@ class ElementsTest < Test::Unit::TestCase
 
   test "element should not escape content that has been marked as html safe" do
     html = "<safe></safe>".html_safe
-    assert_equal %Q{<el><safe></safe></el>}, @object.element!("el") { html }
+    assert_equal %Q{<el><safe></safe></el>}, @object.element!("el") { @object.write! html }
   end
 
   test "element should not escape attributes that have been marked as html safe" do
@@ -149,14 +153,14 @@ class ElementsTest < Test::Unit::TestCase
   # Building =================================================================
   test "element should be nestable" do
     assert_equal %Q{<el><nested>content</nested></el>},
-      @object.element!("el") { @object.element!("nested") { "content" } }
+      @object.element!("el") { @object.element!("nested") { @object.write! "content" } }
   end
 
   test "element should be nestable and chainable without concatenation" do
     assert_equal %Q{<el><nest>content</nest><nested>more content</nested></el>},
       @object.element!("el") {
-        @object.element!("nest") { "content" }
-        @object.element!("nested") { "more content" }
+        @object.element!("nest") { @object.write! "content" }
+        @object.element!("nested") { @object.write! "more content" }
       }
   end
 
@@ -166,18 +170,18 @@ class ElementsTest < Test::Unit::TestCase
 
   test "element should append to object that responds to arrows" do
     object = Class.new(Array) { include Crafty::Elements }.new
-    assert_equal ["<el><nest>content</nest><nested>more content</nested></el>"],
+    assert_equal ["<el>", "<nest>", "content", "</nest>", "<nested>", "more content", "</nested>", "</el>"],
       object.element!("el") {
-        object.element!("nest") { "content" }
-        object.element!("nested") { "more content" }
+        object.element!("nest") { object.write! "content" }
+        object.element!("nested") { object.write! "more content" }
       }
   end
 
   test "element should append html safe strings to object that responds to arrows" do
     object = Class.new(Array) { include Crafty::Elements }.new
     result = object.element!("el") {
-      object.element!("nest") { "content" }
-      object.element!("nested") { "more content" }
+      object.element!("nest") { object.write! "content" }
+      object.element!("nested") { object.write! "more content" }
     }
     assert_equal [true] * result.length, result.map(&:html_safe?)
   end

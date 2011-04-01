@@ -29,22 +29,24 @@ module Crafty
         attributes = arguments.pop if arguments.last.kind_of?(Hash)
         content = arguments.first
         if content or block_given?
-          @crafty_output << "<#{element}#{Elements.format_attributes(attributes)}>"
-          unless (content ||= yield) == @crafty_output
-            @crafty_output << Elements.escape(content.to_s)
+          concat! "<#{element}#{Elements.format_attributes(attributes)}>"
+          if block_given?
+            yield
+          else
+            concat! Elements.escape(content.to_s)
           end
-          @crafty_output << "</#{element}>"
+          concat! "</#{element}>"
         else
-          @crafty_output << "<#{element}#{Elements.format_attributes(attributes)}/>"
+          concat! "<#{element}#{Elements.format_attributes(attributes)}/>"
         end
       end
     end
 
     def comment!(content)
       build! do
-        @crafty_output << "<!-- "
-        @crafty_output << Elements.escape(content.to_s)
-        @crafty_output << " -->"
+        concat! "<!-- "
+        concat! Elements.escape(content.to_s)
+        concat! " -->"
       end
     end
 
@@ -54,13 +56,13 @@ module Crafty
         attributes = { :version => "1.0", :encoding => "UTF-8" }
       end
       build! do
-        @crafty_output << "<?#{name}#{Elements.format_attributes(attributes)}?>"
+        concat! "<?#{name}#{Elements.format_attributes(attributes)}?>"
       end
     end
 
     def text!(content)
       build! do
-        @crafty_output << Elements.escape(content.to_s)
+        concat! Elements.escape(content.to_s)
       end
     end
     alias_method :write!, :text!
@@ -72,10 +74,22 @@ module Crafty
         begin
           @crafty_output = SafeString.new
           yield
-          if respond_to? :<< then self << @crafty_output else @crafty_output end
+          if respond_to? :<<
+            self
+          else
+            @crafty_output
+          end
         ensure
           @crafty_output = nil
         end
+      end
+    end
+
+    def concat!(data)
+      if respond_to? :<<
+        self << data.html_safe
+      else
+        @crafty_output << data
       end
     end
   end

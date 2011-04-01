@@ -25,7 +25,7 @@ require "markaby"
 
 include Erector::Mixin
 
-max = (ARGV.shift || 10_000).to_i
+max = (ARGV.shift || 20_000).to_i
 
 def do_nothing url
   url
@@ -190,7 +190,6 @@ class Cr
         10.times do
           a "a link", :href => url
         end
-        nil
       end
     end
   end
