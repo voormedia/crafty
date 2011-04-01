@@ -22,6 +22,11 @@ task :bench do
   require File.expand_path("benchmark/bench", File.dirname(__FILE__))
 end
 
+desc "Profile Crafty"
+task :profile do
+  require File.expand_path("benchmark/profile", File.dirname(__FILE__))
+end
+
 desc "Regenerate toolsets"
 task :generate do
   require File.expand_path("src/elements", File.dirname(__FILE__))
@@ -48,7 +53,7 @@ task :generate do
 
   autoloading = ["  # Generated HTML toolsets."]
   Versions.each do |version|
-    path = "crafty/toolsets/#{version.downcase}"
+    path = "crafty/toolsets/#{version.to_s.downcase}"
     file = File.open("lib/#{path}.rb", "w+")
     file.puts "module Crafty"
     file.puts "  # This toolset has been automatically generated."
@@ -74,7 +79,8 @@ task :generate do
     file.puts "    end"
     file.puts "  end"
 
-    aliases = Aliases.select { |alt, orig| orig == version }.keys
+    aliases = []
+    Aliases.each { |alt, orig| aliases << alt if orig == version }
     file.puts "\n  #{aliases * " = "} = #{version}" if aliases.any?
     file.puts "end"
     file.close

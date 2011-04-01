@@ -11,7 +11,7 @@ class String
   end
 end
 
-engines = %w{crafty tagz erector nokogiri builder haml erubis markaby}
+engines = %w{crafty tagz erector nokogiri builder haml erubis} # + %w{markaby}
 
 engines.each do |engine|
   require File.expand_path(engine, File.dirname(__FILE__))

@@ -1,6 +1,8 @@
 require File.expand_path("../test_helper", File.dirname(__FILE__))
 
 class HTMLBase < Test::Unit::TestCase
+  def test_dummy; end
+
   def self.behaves_as_basic_html
     # Simple methods ===========================================================
     test "div should return content with given attributes" do
