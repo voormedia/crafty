@@ -1,6 +1,10 @@
 module Crafty
   module Toolset
     class << self
+      # Define the given elements and self-closing elements in the given
+      # module. The module will be modified to never overwrite existing
+      # methods, even if they have been defined in superclasses or other
+      # previously-included modules.
       def define(mod, elements = [], empty_elements = [])
         define_elements(mod, elements)
         define_empty_elements(mod, empty_elements)
@@ -23,6 +27,7 @@ module Crafty
         end
       end
 
+      # Define regular elements in the given module.
       def define_elements(mod, elements)
         elements.each do |element|
           mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
@@ -35,6 +40,7 @@ module Crafty
         end
       end
 
+      # Define empty, self-closing elements in the given module.
       def define_empty_elements(mod, elements)
         elements.each do |element|
           mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1

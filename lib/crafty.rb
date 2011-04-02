@@ -1,3 +1,5 @@
+# Crafty provides a set of modules that provide helper methods to create
+# various HTML elements.
 module Crafty
   autoload :Tools, "crafty/tools"
   autoload :Toolset, "crafty/toolset"

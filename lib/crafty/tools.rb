@@ -5,11 +5,14 @@ module Crafty
     class << self
       ESCAPE_SEQUENCE = { "&" => "&amp;", ">" => "&gt;", "<" => "&lt;", '"' => "&quot;" }
 
+      # Escape HTML/XML unsafe characters.
       def escape(content)
         return content if content.html_safe?
         content.gsub(/[&><"]/) { |char| ESCAPE_SEQUENCE[char] }
       end
 
+      # Formats the given hash of attributes into a string that can be used
+      # directly inside an HTML/XML tag.
       def format_attributes(attributes)
         return if attributes.nil?
         attributes.collect do |name, value|
@@ -23,6 +26,8 @@ module Crafty
         end.join
       end
 
+      # Formats the given array of parameters into a string that can be used
+      # directly inside an HTML/XML (entity) declaration.
       def format_parameters(parameters)
         return if parameters.nil?
         parameters.collect do |name|
@@ -31,6 +36,8 @@ module Crafty
         end.join
       end
 
+      # Creates a safe string buffer or wraps the given object in an object
+      # that acts like a safe string buffer.
       def create_stream(base)
         if base.respond_to? :<<
           SafeWrapper.new(base)
@@ -40,6 +47,10 @@ module Crafty
       end
     end
 
+    # Write an element with the given name, content and attributes. If
+    # there is no content and no block is given, a self-closing element is
+    # created. Provide an empty string as content to create an empty,
+    # non-self-closing element.
     def element!(name, content = nil, attributes = nil)
       build! do
         if content or block_given?
@@ -57,6 +68,7 @@ module Crafty
       end
     end
 
+    # Write a comment with the given content.
     def comment!(content)
       build! do
         @_crafted << "<!-- "
@@ -65,6 +77,8 @@ module Crafty
       end
     end
 
+    # Write a processing instruction with the given name and attributes.
+    # Without arguments, it creates a default xml processing instruction.
     def instruct!(name = nil, attributes = {})
       unless name
         name = "xml"
@@ -75,12 +89,15 @@ module Crafty
       end
     end
 
+    # Write a (doctype or entity) declaration with the given name and
+    # parameters.
     def declare!(name, *parameters)
       build! do
         @_crafted << "<!#{name}#{Tools.format_parameters(parameters)}>"
       end
     end
 
+    # Write the given text, escaping it if necessary.
     def text!(content)
       build! do
         @_crafted << Tools.escape(content.to_s)
@@ -88,6 +105,7 @@ module Crafty
     end
     alias_method :write!, :text!
 
+    # Collects all elements built inside the given block into a single string.
     def build!
       @_appended = false
       if @_crafted
