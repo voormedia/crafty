@@ -130,7 +130,8 @@ Benchmarks
 
 Benchmarks do not necessarily give a complete picture of real-world
 performance. Nevertheless, we wish to demonstrate that Crafty is fast enough
-for daily use. These benchmarks were performed with Ruby 1.9.2.
+for daily use. These benchmarks are the result of rendering a relatively small
+template 50000 times. They were performed on Max OS X with Ruby 1.9.2.
 
     Number of iterations = 50000
                               user     system      total        real
@@ -140,6 +141,9 @@ for daily use. These benchmarks were performed with Ruby 1.9.2.
     erector              15.400000   0.110000  15.510000 ( 15.491134)
     tagz                 32.860000   0.650000  33.510000 ( 33.461828)
     nokogiri             27.450000   0.210000  27.660000 ( 27.608287)
+
+The implementation of these benchmarks can be found in the
+[benchmark](https://github.com/voormedia/crafty/tree/master/benchmark) directory.
 
 
 Requirements
