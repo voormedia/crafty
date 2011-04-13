@@ -3,6 +3,7 @@
 module Crafty
   autoload :Tools, "crafty/tools"
   autoload :Toolset, "crafty/toolset"
+  autoload :Builder, "crafty/builder"
 
   autoload :HTML5, "crafty/toolsets/html5"
   autoload :HTML4, "crafty/toolsets/html4"
