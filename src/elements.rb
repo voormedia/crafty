@@ -6,7 +6,6 @@
 
 # Available HTML versions.
 Versions = [:HTML4, :HTML5]
-Aliases = { :HTML => :HTML5, :XHTML => :HTML4 }
 
 # http://www.w3.org/TR/1999/REC-html401-19991224/index/elements.html
 HTML4 = %w{a abbr acronym address applet area b base basefont bdo big

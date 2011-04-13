@@ -1,1 +1,10 @@
+.DS_Store
+.bundle
+.yardoc
+*.pdf
+*.rbc
+doc
 pkg
+output
+rdoc
+site/_generated

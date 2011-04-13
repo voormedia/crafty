@@ -55,49 +55,42 @@ task :generate do
     simple_format("Toolset.define(self, %w{#{regular * " "}}" + (empty.any? ? ", %w{#{empty * " "}}" : "") + ")")
   end
 
-  autoloading = ["  # Generated HTML toolsets."]
-  Versions.each do |version|
-    path = "crafty/toolsets/#{version.to_s.downcase}"
+  def create_set(version, set, elements)
+    path = "crafty/toolsets/#{version.to_s.downcase}/#{set.to_s.downcase}"
     file = File.open("lib/#{path}.rb", "w+")
     file.puts "module Crafty"
     file.puts "  # This toolset has been automatically generated."
     file.puts "  module #{version}"
-
-    version_elements = Object.const_get(version)
-    Sets.each do |set|
-      set_elements = Object.const_get(set)
-
-      broken = set_elements - (HTML4 + HTML5)
-      raise "Incorrect elements in set: #{broken}" if broken.any?
-
-      all = version_elements & set_elements
-
-      file.puts "    module #{set}"
-      file.puts define(set, all - Childless, all & Childless)
-      file.puts "    end"
-      file.puts
-    end
-
-    file.puts "    module All"
-    file.puts define(:All, version_elements - Childless, version_elements & Childless)
+    file.puts "    module #{set}"
+    file.puts define(set, elements - Childless, elements & Childless)
     file.puts "    end"
     file.puts "  end"
-
-    aliases = []
-    Aliases.each { |alt, orig| aliases << alt if orig == version }
-    file.puts "\n  #{aliases * " = "} = #{version}" if aliases.any?
+    file.puts "  # End of generated code."
     file.puts "end"
     file.close
-
-    ([version] + aliases).each do |mod|
-      autoloading << %Q(  autoload #{mod.inspect}, #{path.inspect})
-    end
-    autoloading << ""
+    [set, path]
   end
 
-  lib = File.read("lib/crafty.rb")
-  lib.gsub!(/^\s*#\s*Generated.*\nend/m, "\n" + autoloading.join("\n") + "end")
-  File.open "lib/crafty.rb", "w+" do |file|
-    file.write lib
+  Versions.each do |version|
+    version_elements = Object.const_get(version)
+    sets = Sets.collect do |set|
+      set_elements = Object.const_get(set)
+      broken = set_elements - (HTML4 + HTML5)
+      raise "Incorrect elements in set: #{broken}" if broken.any?
+      create_set(version, set, version_elements & set_elements)
+    end
+    sets << create_set(version, :All, version_elements)
+
+    autoloading = [
+      "    # These load paths have been automatically generated.",
+      *(sets.collect { |set, path| %Q(    autoload :#{set}, "#{path}") }),
+      "    # End of generated code."] * "\n"
+
+    version_file = "lib/crafty/toolsets/#{version.to_s.downcase}.rb"
+
+    mod = File.read(version_file)
+    file = File.open(version_file, "w+")
+    file.write mod.sub(/(  module #{version}\n).*?\n?(  end)/m, "\\1#{autoloading}\n\\2")
+    file.close
   end
 end
