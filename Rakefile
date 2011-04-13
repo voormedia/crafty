@@ -73,13 +73,15 @@ task :generate do
 
   Versions.each do |version|
     version_elements = Object.const_get(version)
-    sets = Sets.collect do |set|
+
+    sets = []
+    sets << create_set(version, :All, version_elements)
+    sets += Sets.collect do |set|
       set_elements = Object.const_get(set)
       broken = set_elements - (HTML4 + HTML5)
       raise "Incorrect elements in set: #{broken}" if broken.any?
       create_set(version, set, version_elements & set_elements)
     end
-    sets << create_set(version, :All, version_elements)
 
     autoloading = [
       "    # These load paths have been automatically generated.",
