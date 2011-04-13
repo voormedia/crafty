@@ -2,7 +2,8 @@ require File.expand_path("../test_helper", File.dirname(__FILE__))
 
 class BuilderTest < Test::Unit::TestCase
   def setup
-    @builder = Class.new(Crafty::Builder) { include Crafty::HTML::All }.new
+    @klass = Class.new(Crafty::Builder) { include Crafty::HTML::All }
+    @builder = @klass.new
   end
 
   # Basic builder functionality ==============================================
@@ -19,6 +20,15 @@ class BuilderTest < Test::Unit::TestCase
   test "div should build content with given attributes" do
     @builder.div("Hello", :class => "green")
     assert_equal %Q{<div class="green">Hello</div>}, @builder.to_s
+  end
+
+  test "build should yield builder and return built content" do
+    result = @klass.build do |b|
+      b.div :class => "green" do
+        b.em "Hello"
+      end
+    end
+    assert_equal %Q{<div class="green"><em>Hello</em></div>}, result
   end
 
   # Examples ===============================================================
