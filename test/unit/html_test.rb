@@ -94,13 +94,49 @@ class HTMLBase < Test::Unit::TestCase
         end
       }
     end
+
+    # Builders ===============================================================
+    test "builder should build html" do
+      out = @html::Builder.build do |b|
+        b.html do
+          b.head do
+            b.title "my document"
+            b.link :href => "style.css", :rel => :stylesheet, :type => "text/css"
+          end
+          b.body :class => :awesome do
+            b.div {
+              b.div {
+                b.table :cellspacing => 0 do
+                  b.tr {
+                    b.th "Col 1"
+                    b.th "Col 2"
+                  }
+                  b.tr {
+                    b.td 10_000
+                    b.td "content"
+                  }
+                end
+              }
+            }
+          end
+        end
+      end
+      assert_equal %Q{<html>} +
+        %Q{<head><title>my document</title><link href="style.css" rel="stylesheet" type="text/css"/></head>} +
+        %Q{<body class="awesome"><div><div><table cellspacing="0">} +
+        %Q{<tr><th>Col 1</th><th>Col 2</th></tr>} +
+        %Q{<tr><td>10000</td><td>content</td></tr>} +
+        %Q{</table></div></div></body>} +
+        %Q{</html>}, out
+    end
   end
 end
 
 class HTML5Test < HTMLBase
   def setup
-    @object = Class.new { include Crafty::HTML5::Basic }.new
-    @streaming_object = Class.new(Array) { include Crafty::HTML5::Basic }.new
+    @html = html = Crafty::HTML5
+    @object = Class.new { include html::Basic }.new
+    @streaming_object = Class.new(Array) { include html::Basic }.new
   end
 
   behaves_as_basic_html
@@ -108,8 +144,9 @@ end
 
 class HTML4Test < HTMLBase
   def setup
-    @object = Class.new { include Crafty::HTML4::Basic }.new
-    @streaming_object = Class.new(Array) { include Crafty::HTML4::Basic }.new
+    @html = html = Crafty::HTML4
+    @object = Class.new { include html::Basic }.new
+    @streaming_object = Class.new(Array) { include html::Basic }.new
   end
 
   behaves_as_basic_html

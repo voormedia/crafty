@@ -5,6 +5,7 @@ module Crafty
     autoload :Basic, "crafty/toolsets/html4/basic"
     autoload :Forms, "crafty/toolsets/html4/forms"
     autoload :Semantic, "crafty/toolsets/html4/semantic"
+    autoload :Builder, "crafty/toolsets/html4/builder"
     # End of generated code.
   end
 

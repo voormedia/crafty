@@ -71,6 +71,22 @@ task :generate do
     [set, path]
   end
 
+  def create_builder(version, set)
+    path = "crafty/toolsets/#{version.to_s.downcase}/builder"
+    file = File.open("lib/#{path}.rb", "w+")
+    file.puts "module Crafty"
+    file.puts "  # This builder has been automatically generated."
+    file.puts "  module #{version}"
+    file.puts "    class Builder < Crafty::Builder"
+    file.puts "      include #{set}"
+    file.puts "    end"
+    file.puts "  end"
+    file.puts "  # End of generated code."
+    file.puts "end"
+    file.close
+    [:Builder, path]
+  end
+
   Versions.each do |version|
     version_elements = Object.const_get(version)
 
@@ -82,6 +98,7 @@ task :generate do
       raise "Incorrect elements in set: #{broken}" if broken.any?
       create_set(version, set, version_elements & set_elements)
     end
+    sets << create_builder(version, :All)
 
     autoloading = [
       "    # These load paths have been automatically generated.",
