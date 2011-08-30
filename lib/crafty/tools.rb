@@ -59,7 +59,9 @@ module Crafty
             value = yield
             content = value if !@_appended or value.kind_of? String
           end
-          content = content.to_s
+
+          content = content.respond_to?(:empty?) && content.empty? ? '' : content.to_s
+
           @_crafted << Tools.escape(content) if content != ""
           @_crafted << "</#{name}>"
         else
