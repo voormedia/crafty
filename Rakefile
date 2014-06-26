@@ -102,8 +102,8 @@ task :generate do
 
     autoloading = [
       "    # These load paths have been automatically generated.",
-      *(sets.collect { |set, path| %Q(    autoload :#{set}, "#{path}") }),
-      "    # End of generated code."] * "\n"
+      sets.collect { |set, path| %Q(    autoload :#{set}, "#{path}") },
+      "    # End of generated code."].flatten * "\n"
 
     version_file = "lib/crafty/toolsets/#{version.to_s.downcase}.rb"
 
